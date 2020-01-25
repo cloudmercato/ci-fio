@@ -1,0 +1,30 @@
+kind: pipeline
+type: docker
+name: AMD64
+platform:
+  arch: amd64
+
+steps:
+- name: Run
+  image: python
+  commands:
+  - git submodule sync
+  - git submodule update --init --recursive
+  - ci-base/install.sh drone
+  - ./install.sh drone
+  - ./run.sh
+  environment:
+    MASTER_URL:
+      from_secret: MASTER_URL
+    TOKEN:
+      from_secret: TOKEN
+    PROVIDER_ID:
+      from_secret: PROVIDER_ID
+    DATACENTER_ID:
+      from_secret: DATACENTER_ID
+    AMD64_DOCKER_LINUX_IMAGE_ID:
+      from_secret: AMD64_DOCKER_LINUX_IMAGE_ID
+    AMD64_DOCKER_FLAVOR_ID:
+      from_secret: AMD64_DOCKER_FLAVOR_ID
+    AMD64_DOCKER_VOLUME_FLAVOR_ID:
+      from_secret: AMD64_DOCKER_VOLUME_FLAVOR_ID

@@ -1,10 +1,14 @@
 #!/bin/bash
 
-apt install libaio-dev build-essential
-wget -q https://github.com/axboe/fio/archive/fio-3.17.tar.gz
-tar xf fio-3.17.tar.gz
+export DEBIAN_FRONTEND=noninteractive
 
-cd fio-3.17/fio-fio-3.17
+apt install libaio-dev build-essential -y
+wget -q https://github.com/axboe/fio/archive/fio-2.17.tar.gz
+tar xf fio-2.17.tar.gz
+
+cd fio-fio-2.17
 ./configure
 make
 make install
+
+ln -s /usr/local/bin/fio /bin/fio
