@@ -1,0 +1,3 @@
+[submodule "ci-base"]
+	path = ci-base
+	url = https://github.com/cloudspectatordevelopment/ci-base.git
