@@ -1,13 +1,14 @@
 #!/bin/bash
 
+sudo=$(which sudo)
 iterations=${iterations:-3}
 cpu_number=$(lscpu | awk '/^CPU\(s\)/{print $2}')
 threads=$(for i in $(seq 0 16); do [ $((2**i)) -le $((2*cpu_number)) ] && echo $((2**i)) ; done)
 device=$(df / | awk '/^\/dev/ {print $1}')
 device_size=$(df -k | awk '/^.* \/$/ {print $2}')
-fio_size=$(($device_size * 3/4 * 1024))
+fio_size=$(($device_size * 3/4))
 
-volume_flavor_id=$(jq . .volume_flavor_id)
+volume_flavor_id=$(cat .volume_flavor_id)
 
 run_fio () {
     echo "Running $1 $2$3 #$i"
@@ -24,9 +25,9 @@ run_fio () {
         --filename=fio-$1-$2$3 \
         --size=$fio_size \
         --group_reporting --output-format=json --name=fio \
-        | tee /fio-$1-$2$3-$i.json
+        > /tmp/fio-$1-$2$3-$i.json
     cb-client fio -n $i \
-        -vf $volume_flavor_id < /fio-$1-$2$3-$i.json
+        -vf $volume_flavor_id < /tmp/fio-$1-$2$3-$i.json
     rm fio-$1-$2$3
 }
 
